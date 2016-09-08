@@ -1,15 +1,16 @@
+var render = require('./lib/render')
+var route = require('koa-route')
 var koa = require('koa')
-var app = koa()
-
-// error
+var app = module.exports = koa()
 
 app.on('error', function (err) {
   console.log('server error', err)
+  this.body = render('error', { error: err })
 })
 
 // Order of middleware use() is important
 
-// x-response-time
+// logger
 // uses generator function which records date then yields to next
 // function added to chain, when chain finishes it records response
 // time and adds to response as header
@@ -17,21 +18,20 @@ app.use(function *(next) {
   var start = new Date()
   yield next
   var ms = new Date() - start
-  this.set('X-Response-Time', ms + 'ms')
+  console.log('%s %s - %s - %s', this.method, this.url, this.status, ms)
 })
 
-// logger
-app.use(function *(next) {
-  var start = new Date()
+app.use(function *pageNotFound (next) {
   yield next
-  var ms = new Date() - start
-  console.log('%s %s - %s', this.method, this.url, ms)
+  if (this.status !== 404) return
+  this.status = 404
+  this.body = yield render('notfound')
 })
 
-// response
+app.use(route.get('/', index))
 
-app.use(function *() {
-  this.body = 'Hello World'
-})
+function *index () {
+  this.body = yield render('index', { message: 'Hello it\'s ' + new Date() })
+}
 
 app.listen(3000)

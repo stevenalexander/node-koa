@@ -1,5 +1,7 @@
 var render = require('./lib/render')
-var route = require('koa-route')
+
+var routeIndex = require('./routes/index')
+
 var koa = require('koa')
 var app = module.exports = koa()
 
@@ -28,10 +30,7 @@ app.use(function *pageNotFound (next) {
   this.body = yield render('notfound')
 })
 
-app.use(route.get('/', index))
-
-function *index () {
-  this.body = yield render('index', { message: 'Hello it\'s ' + new Date() })
-}
+// Mount route via IoC so index routes are independent of app.js
+routeIndex(app)
 
 app.listen(3000)

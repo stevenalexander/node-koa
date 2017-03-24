@@ -20,6 +20,7 @@ app.use(function *(next) {
   var start = new Date()
   yield next
   var ms = new Date() - start
+  this.set('Server-Timing', `web=${ms / 1000.0}; "Web"`) // additional values can be added, e.g. `db=0.4; "DB"`
   console.log('%s %s - %s - %s', this.method, this.url, this.status, ms)
 })
 

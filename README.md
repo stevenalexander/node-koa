@@ -2,7 +2,7 @@
 
 [![BuildStatus](https://travis-ci.org/stevenalexander/node-koa.svg?branch=master)](https://travis-ci.org/stevenalexander/node-koa?branch=master)
 
-Sample [Koa](http://koajs.com/) applicationn to test out handling asyc operations.
+Sample [Koa](http://koajs.com/) application to test out handling asyc operations.
 
 
 ### Notes
